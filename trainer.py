@@ -114,20 +114,40 @@ def _train(args):
         cudnn.benchmark = True
 
     criterion = _make_criterion(alpha=args.alpha, T=args.T, mode=args.kd_mode)
-    optimizer = optim.Adam(student_net.parameters(), lr=args.lr)
+    if args.optimizer == 'sgd':
+        optimizer = optim.SGD(
+            student_net.parameters(), lr=args.lr, momentum=0.9)
+    elif args.optimizer == 'sgd-cifar10':
+        optimizer = optim.SGD(student_net.parameters(), lr=0.1, momentum=0.9)
+    elif args.optimizer == 'adam':
+        optimizer = optim.Adam(student_net.parameters(), lr=args.lr)
+    else:
+        raise NotImplementedError()
 
-    for epoch_idx in range(args.n_epoch):
+    for epoch_idx in range(1, args.n_epoch + 1):
         print('\nEpoch: %d' % epoch_idx)
 
         __train_epoch(student_net, teacher_net, trainloader, device, criterion,
                       optimizer)
         __test_epoch(student_net, testloader, device, criterion)
 
+        if args.optimizer == 'sgd-cifar10':
+            if epoch_idx == 150:
+                optimizer = optim.SGD(
+                    student_net.parameters(), lr=0.01, momentum=0.9)
+            elif epoch_idx == 250:
+                optimizer = optim.SGD(
+                    student_net.parameters(), lr=0.001, momentum=0.9)
+
 
 def main():
     parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
     parser.add_argument(
-        '--lr', default=0.0001, type=float, help='learning rate')
+        '--lr',
+        # default=0.1,
+        default=0.0001,
+        type=float,
+        help='learning rate')
     parser.add_argument('--n_epoch', default=300, type=int, help='epoch')
     parser.add_argument(
         '--alpha', default=1.0, type=float, help='weight for soft loss.')
@@ -140,8 +160,14 @@ def main():
         help='name for teacher model')
     parser.add_argument(
         '--optimizer',
+        # default='sgd',
+        # default='sgd-cifar10',
         default='adam',
-        choices=['sgd', 'adam'],
+        choices=[
+            'sgd',
+            'sgd-cifar10',  # pytorch-cifar 에서 썼던 optimizer.
+            'adam'
+        ],
         type=str,
         help='name for optimizer')
     parser.add_argument(
@@ -149,6 +175,10 @@ def main():
     args = parser.parse_args()
 
     assert 0 <= args.alpha <= 1, "alpha should be between 0 and 1."
+
+    if args.optimizer == 'sgd-cifar10':
+        args.n_epoch = 300
+        args.lr = 0.1
 
     _train(args)
 

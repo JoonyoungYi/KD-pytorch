@@ -98,6 +98,8 @@ def _pretrain(args):
     criterion = nn.CrossEntropyLoss()
     if args.optimizer == 'sgd':
         optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9)
+    elif args.optimizer == 'sgd-cifar10':
+        optimizer = optim.SGD(net.parameters(), lr=0.1, momentum=0.9)
     elif args.optimizer == 'adam':
         optimizer = optim.Adam(net.parameters(), lr=args.lr)
     else:
@@ -121,24 +123,31 @@ def _pretrain(args):
             torch.save(state, './checkpoint/{}.pth'.format(args.model_name))
             best_acc = acc
 
+        if args.optimizer == 'sgd-cifar10':
+            if epoch_idx == 150:
+                optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
+            elif epoch_idx == 250:
+                optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+
 
 def main():
     parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Pretraining')
     parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
     parser.add_argument(
-        '--start_epoch', default=0, type=int, help='start epoch')
+        '--start_epoch', default=1, type=int, help='start epoch')
     parser.add_argument('--n_epoch', default=300, type=int, help='epoch')
     parser.add_argument(
         '--model_name',
         default='test',
         # default='ckpt',
         # default='student-scratch',
+        # default='student-scratch-sgd-cifar10',
         type=str,
         help='name for model')
     parser.add_argument(
         '--optimizer',
         default='sgd',
-        choices=['sgd', 'adam'],
+        choices=['sgd', 'adam', 'sgd-cifar10'],
         type=str,
         help='name for optimizer')
     parser.add_argument(
@@ -150,6 +159,10 @@ def main():
     parser.add_argument(
         '--resume', '-r', action='store_true', help='resume from checkpoint')
     args = parser.parse_args()
+
+    if args.optimizer == 'sgd-cifar10':
+        args.n_epoch = 300
+        args.lr = 0.1
 
     _pretrain(args)
 
