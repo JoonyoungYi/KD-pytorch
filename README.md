@@ -37,14 +37,14 @@ python -m pretrainer --optimizer=sgd --lr=0.001 --start_epoch=250 --n_epoch=50  
 python -m pretrainer --optimizer=adam --lr=0.0001 --start_epoch=0 --n_epoch=300 --model_name=student-scratch --network=studentnet
 ```
 
-# Effect of loss function
+### Effect of loss function
 * Similar performance.
 ```
 python -m trainer --T=1.0 --alpha=1.0 --kd_mode=cse # 84.99%
 python -m trainer --T=1.0 --alpha=1.0 --kd_mode=mse # 84.85%
 ```
 
-## Effect of Alpha
+### Effect of Alpha
 * alpha = 0.5 may show better performance.
 ```
 python -m trainer --T=1.0 --alpha=1.0 --kd_mode=cse # 84.99%
