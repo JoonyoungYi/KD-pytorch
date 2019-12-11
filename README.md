@@ -75,8 +75,8 @@ python -m trainer --T=16.0 --alpha=0.9 --kd_mode=cse # 86.08%
 
 ### EXP5. SGD Testing
 ```
-python -m trainer --T=16.0 --alpha=0.5 --kd_mode=cse --optimizer=sgd-cifar10 # [0]
-python -m pretrainer --model_name=student-scratch-sgd-cifar10 --network=studentnet --optimizer=sgd-cifar10 # [1]
+python -m trainer --T=16.0 --alpha=0.5 --kd_mode=cse --optimizer=sgd-cifar10 # 87.04%
+python -m pretrainer --model_name=student-scratch-sgd-cifar10 --network=studentnet --optimizer=sgd-cifar10 # 86.34%
 ```
 
 ## TODO
