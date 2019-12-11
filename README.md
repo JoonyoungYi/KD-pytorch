@@ -31,20 +31,20 @@ python -m pretrainer --optimizer=sgd --lr=0.001 --start_epoch=250 --n_epoch=50  
   * learning rate: `0.0001`
   * no weight decay for fair comparison.
 
-### Baseline (without Knowledge Distillation)
+### EXP0. Baseline (without Knowledge Distillation)
 * Result: 85.01%
 ```
 python -m pretrainer --optimizer=adam --lr=0.0001 --start_epoch=0 --n_epoch=300 --model_name=student-scratch --network=studentnet
 ```
 
-### Effect of loss function
+### EXP1. Effect of loss function
 * Similar performance.
 ```
 python -m trainer --T=1.0 --alpha=1.0 --kd_mode=cse # 84.99%
 python -m trainer --T=1.0 --alpha=1.0 --kd_mode=mse # 84.85%
 ```
 
-### Effect of Alpha
+### EXP2. Effect of Alpha
 * alpha = 0.5 may show better performance.
 ```
 python -m trainer --T=1.0 --alpha=1.0 --kd_mode=cse # 84.99%
@@ -53,7 +53,7 @@ python -m trainer --T=1.0 --alpha=1.0 --kd_mode=mse # 84.85%
 python -m trainer --T=1.0 --alpha=0.5 --kd_mode=mse # 84.92%
 ```
 
-### Effect of Temperature Scaling
+### EXP3. Effect of Temperature Scaling
 * Higher the temperature, better the performance. Consistent results with the paper.
 ```
 python -m trainer --T=1.0  --alpha=0.5 --kd_mode=cse # 85.38%
@@ -63,7 +63,7 @@ python -m trainer --T=8.0  --alpha=0.5 --kd_mode=cse # 86.33%
 python -m trainer --T=16.0 --alpha=0.5 --kd_mode=cse # 86.58%
 ```
 
-### More Alpha Tuning
+### EXP4. More Alpha Tuning
 * alpha=0.5 seems to be local optimal.
 ```
 python -m trainer --T=16.0 --alpha=0.1 --kd_mode=cse # 85.69%
@@ -73,7 +73,7 @@ python -m trainer --T=16.0 --alpha=0.7 --kd_mode=cse # 86.16%
 python -m trainer --T=16.0 --alpha=0.9 --kd_mode=cse # 86.08%
 ```
 
-### SGD Testing
+### EXP5. SGD Testing
 ```
 python -m trainer --T=16.0 --alpha=0.5 --kd_mode=cse --optimizer=sgd-cifar10 # [0]
 python -m pretrainer --model_name=student-scratch-sgd-cifar10 --network=studentnet --optimizer=sgd-cifar10 # [1]
