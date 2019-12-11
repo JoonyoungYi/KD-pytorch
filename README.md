@@ -16,13 +16,13 @@
 * Result: 91.90%
 * SGD, no weight decay.
 * Learning rate adjustment
-  * `0.1` for epoch `[0,150)`
-  * `0.01` for epoch `[150,250)`
-  * `0.001` for epoch `[250,300)`
+  * `0.1` for epoch `[1,150]`
+  * `0.01` for epoch `[151,250]`
+  * `0.001` for epoch `[251,300]`
 ```
-python -m pretrainer --optimizer=sgd --lr=0.1   --start_epoch=0   --n_epoch=150 --model_name=ckpt
-python -m pretrainer --optimizer=sgd --lr=0.01  --start_epoch=150 --n_epoch=100 --model_name=ckpt --resume
-python -m pretrainer --optimizer=sgd --lr=0.001 --start_epoch=250 --n_epoch=50  --model_name=ckpt --resume
+python -m pretrainer --optimizer=sgd --lr=0.1   --start_epoch=1   --n_epoch=150 --model_name=ckpt
+python -m pretrainer --optimizer=sgd --lr=0.01  --start_epoch=151 --n_epoch=100 --model_name=ckpt --resume
+python -m pretrainer --optimizer=sgd --lr=0.001 --start_epoch=251 --n_epoch=50  --model_name=ckpt --resume
 ```
 
 ## Student Networks
@@ -34,7 +34,7 @@ python -m pretrainer --optimizer=sgd --lr=0.001 --start_epoch=250 --n_epoch=50  
 ### EXP0. Baseline (without Knowledge Distillation)
 * Result: 85.01%
 ```
-python -m pretrainer --optimizer=adam --lr=0.0001 --start_epoch=0 --n_epoch=300 --model_name=student-scratch --network=studentnet
+python -m pretrainer --optimizer=adam --lr=0.0001 --start_epoch=1 --n_epoch=300 --model_name=student-scratch --network=studentnet
 ```
 
 ### EXP1. Effect of loss function
